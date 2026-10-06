@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
+import { CryptoModule } from './common/crypto/crypto.module';
 import { buildLoggerParams } from './common/logging/logger.config';
 import { validateEnv, type EnvironmentVariables } from './config/env.validation';
 
@@ -15,6 +16,7 @@ import { validateEnv, type EnvironmentVariables } from './config/env.validation'
           NODE_ENV: config.get('NODE_ENV', { infer: true }),
         }),
     }),
+    CryptoModule,
   ],
 })
 export class AppModule {}
