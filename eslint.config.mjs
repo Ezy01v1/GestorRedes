@@ -16,6 +16,15 @@ export default tseslint.config(
     },
   },
   {
+    // supertest y expect devuelven `any`: en los tests no aporta exigir tipos estrictos.
+    files: ['**/*.spec.ts', '**/*-spec.ts', '**/test/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+    },
+  },
+  {
     files: ['**/*.mjs', '**/*.js'],
     ...tseslint.configs.disableTypeChecked,
     rules: { 'no-console': 'off' },
