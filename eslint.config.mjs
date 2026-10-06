@@ -1,6 +1,7 @@
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
+import globals from 'globals';
 
 export default tseslint.config(
   { ignores: ['**/dist/**', '**/coverage/**', '**/node_modules/**', '**/generated/**', 'spikes/**'] },
@@ -27,6 +28,10 @@ export default tseslint.config(
   {
     files: ['**/*.mjs', '**/*.js'],
     ...tseslint.configs.disableTypeChecked,
+  },
+  {
+    files: ['**/*.mjs', '**/*.js'],
+    languageOptions: { globals: globals.node },
     rules: { 'no-console': 'off' },
   },
   prettier,
