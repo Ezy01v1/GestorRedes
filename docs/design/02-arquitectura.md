@@ -236,7 +236,7 @@ volumes:
 
 ### Comandos para quien clona el repo
 ```bash
-git clone https://github.com/<usuario>/socialhub && cd socialhub
+git clone https://github.com/Ezy01v1/GestorRedes.git && cd GestorRedes
 npm run setup          # copia .env.example → .env y genera claves aleatorias
 docker compose up -d   # abre http://127.0.0.1:3000 y crea tu contraseña
 ```
