@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { buildEnvFile } from './setup-lib.mjs';
 
@@ -47,4 +48,12 @@ test('conserva comentarios en línea del ejemplo al rellenar un valor', () => {
   const ex = 'APP_ENCRYPTION_KEY=               # 32 bytes en base64\n';
   const { content } = buildEnvFile(ex, null, rnd);
   assert.match(content, /^APP_ENCRYPTION_KEY=\S{44} +# 32 bytes en base64$/m);
+});
+
+test('.env.example no usa comentarios en línea (Docker los toma como valor si la variable está vacía)', () => {
+  const example = readFileSync(new URL('../.env.example', import.meta.url), 'utf8');
+  const inline = example
+    .split(/\r?\n/)
+    .filter((line) => /^[A-Za-z_][A-Za-z0-9_]*=.*\s#/.test(line));
+  assert.deepEqual(inline, []);
 });
