@@ -3,6 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { CryptoModule } from './common/crypto/crypto.module';
 import { buildLoggerParams } from './common/logging/logger.config';
+import { HealthController } from './health/health.controller';
+import { PrismaModule } from './prisma/prisma.module';
 import { validateEnv, type EnvironmentVariables } from './config/env.validation';
 
 @Module({
@@ -17,6 +19,8 @@ import { validateEnv, type EnvironmentVariables } from './config/env.validation'
         }),
     }),
     CryptoModule,
+    PrismaModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}
