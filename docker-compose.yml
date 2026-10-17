@@ -1,0 +1,40 @@
+name: socialhub
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-socialhub}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Falta POSTGRES_PASSWORD en .env (ejecuta npm run setup)}
+      POSTGRES_DB: ${POSTGRES_DB:-socialhub}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '127.0.0.1:${DB_PORT:-5432}:5432' # solo para `npm run dev` desde el host
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  app:
+    build: .
+    env_file: .env
+    environment:
+      HOST: 0.0.0.0 # dentro del contenedor; el puerto solo se publica en 127.0.0.1
+      APP_PORT: 3000 # puerto interno fijo; APP_PORT del .env solo elige el puerto publicado en tu PC
+      DATABASE_URL: postgresql://${POSTGRES_USER:-socialhub}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-socialhub}
+      MEDIA_DIR: /data/media
+      PUBLIC_GATEWAY_PORT: 3001
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - '127.0.0.1:${APP_PORT:-3000}:3000' # la UI solo es accesible desde tu PC
+    volumes:
+      - ${MEDIA_HOST_DIR:-./data/media}:/data/media
+    restart: unless-stopped
+
+volumes:
+  pgdata:
